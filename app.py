@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import json
 import os
+from tfidf import tfidf
 
 from flask import Flask, jsonify, make_response, redirect, request, send_from_directory
 from werkzeug import SharedDataMiddleware
@@ -23,7 +24,7 @@ def api_ctc():
 
     webresponse = {}
     webresponse['cut_off'] = 1
-    webresponse['terms'] = [{'term': 'Apple', 'score': 2.82}, {'term': 'Pear', 'score': 0.33}]
+    webresponse['terms'] = tfidf.get_tf_idf(request.json['text'])
 
     response = jsonify(webresponse)
     response.headers['Access-Control-Allow-Origin'] = '*'
