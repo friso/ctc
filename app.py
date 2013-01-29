@@ -22,8 +22,8 @@ def api_ctc():
         return response
 
     webresponse = {}
-    webresponse['cut_off'] = 42
-    webresponse['terms'] = [{'term': 'Apple', 'score': 0.123}]
+    webresponse['cut_off'] = 1
+    webresponse['terms'] = [{'term': 'Apple', 'score': 2.82}, {'term': 'Pear', 'score': 0.33}]
 
     response = jsonify(webresponse)
     response.headers['Access-Control-Allow-Origin'] = '*'
