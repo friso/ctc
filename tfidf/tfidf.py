@@ -15,7 +15,9 @@ stopwords.extend(['also', ''])
 
 
 def normed_tf_idf(term_frequencies, st):
-	return (term_frequencies[st] / float(max(term_frequencies.values()))) / (math.log(len(document_frequencies)) / float(document_frequencies.get(st, 1)))
+	tf = (term_frequencies[st] / float(max(term_frequencies.values())))
+	idf = (math.log(len(document_frequencies) or 1) / float(document_frequencies.get(st, 1)))
+	return tf / (1 + idf)
 
 """
 Return the TDIDF score for each term in the given document.
@@ -34,13 +36,12 @@ def get_tf_idf(document, update_state = False):
 		cnt.update([term])
 		stemmed_to_terms[stem] = cnt
 
-	stemmed_to_terms = { stemmer.stem(t) : t for t in terms }
 	term_frequencies = Counter([stemmer.stem(t) for t in terms])
 
 	if update_state:
 		document_frequencies.update(stemmed_to_terms.keys())
 
-	tf_idfs = [{ 'score':normed_tf_idf(term_frequencies, t), 'term':stemmed_to_terms[t].most_common(1)[0][0] } for t in term_frequencies.keys()]
+	tf_idfs = [{ 'score':normed_tf_idf(term_frequencies, t), 'term':stemmed_to_terms.get(t.lower()).most_common(1)[0][0] } for t in term_frequencies.keys()]
 	tf_idfs = sorted(tf_idfs, key = lambda x: x['score'], reverse = True)
 	return tf_idfs
 
