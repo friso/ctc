@@ -8,7 +8,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="span8 offset2">
-				<center><h1>Cut the Crap&#0153;</h1></</center>
+				<center><h1>Cut the Crap&#0153;</h1></center>
 			</div>
 			<div class="span1"><h3><sup><font color="#FF0000">beta</font></sup></h3></div>
 		</div>
@@ -57,7 +57,7 @@
 			$('#cutButton').button('loading')
 			$.ajax({
 				type: 'POST',
-				url: 'http://localhost:5000/',
+				url: '/api/ctc',
 				data: JSON.stringify({ text: $('#textInput').val()}),
 				dataType: 'json',
 				contentType: 'application/json; charset=utf-8',
