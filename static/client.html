@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cut the Crap&#0153; &#x2013; BETA</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="span8 offset2">
+				<center><h1>Cut the Crap&#0153;</h1></</center>
+			</div>
+			<div class="span1"><h3><sup><font color="#FF0000">beta</font></sup></h3></div>
+		</div>
+		<form class="form-search" action="#">
+			<div class="row">
+				<div class="span10 offset1">
+					<textarea class="span10" rows="11" placeholder="Random text here..." id="textInput"></textarea>
+				</div>
+			</div><br/>
+			<div class="row">
+				<div class="span2 offset5">
+					<button class="btn btn-primary btn-block btn-large" data-loading-text="Processing..." id="cutButton">CUT!</button>
+				</div>
+			</div>
+			<div class="row"><div class="span10 offset1"><hr/></div></div>
+			<div class="row">
+				<div class="span10 offset1" id="crap">
+				</div>
+			</div>
+			<div class="row"><div class="span10 offset1"><hr/></div></div>
+			<div class="row">
+				<div class="span2 offset10">
+					<button class="btn btn-info btn-mini" id="moreButton" action="#">more crap...</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="js/jquery-1.8.2.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		var currentCrap
+
+		$('#moreButton').hide()
+		$('#moreButton').on('click', function() {
+			currentCrap.cut_off = Math.min(currentCrap.cut_off + 1, currentCrap.terms.length - 1)
+			var s = []
+			for (var c = 0; c <= currentCrap.cut_off; c++) {
+				s.push('<font size="' + currentCrap.terms[c].score + 'pt">' + currentCrap.terms[c].term + '</font>')
+			}
+			$('#crap').html(s.join(', '))
+			return false
+		})
+
+		$('#cutButton').on('click', function() {
+			$('#cutButton').button('loading')
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost:5000/',
+				data: JSON.stringify({ text: $('#textInput').val()}),
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				success: function(data, text) {
+					currentCrap = data
+					var s = []
+					for (var c = 0; c <= currentCrap.cut_off; c++) {
+						s.push('<font size="' + currentCrap.terms[c].score + 'pt">' + currentCrap.terms[c].term + '</font>')
+					}
+					$('#crap').html(s.join(', '))
+					$('#cutButton').button('reset')
+					$('#moreButton').show()
+				},
+				error: function() {
+					$('#cutButton').button('reset')
+				}
+
+			})
+
+			return false
+		})
+	</script>
+</html>
